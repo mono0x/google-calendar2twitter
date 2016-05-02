@@ -98,6 +98,9 @@ func main() {
 
 events:
 	for _, event := range events.Items {
+		if event.Status == "cancelled" {
+			continue events
+		}
 		link := event.HtmlLink + "&ctz=Asia/Tokyo"
 
 		if _, ok := recentUrls[link]; ok {
