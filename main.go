@@ -109,7 +109,17 @@ events:
 		recentUrls[link] = struct{}{}
 
 		var date string
-		if event.Start.DateTime != "" {
+		if event.Start.Date != "" {
+			startLoc, err := time.LoadLocation(event.Start.TimeZone)
+			if err != nil {
+				log.Fatal(err)
+			}
+			start, err := time.ParseInLocation("2006-01-02", event.Start.Date, startLoc)
+			if err != nil {
+				log.Fatal(err)
+			}
+			date = start.Format("01/02")
+		} else if event.Start.DateTime != "" {
 			startLoc, err := time.LoadLocation(event.Start.TimeZone)
 			if err != nil {
 				log.Fatal(err)
