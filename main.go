@@ -52,6 +52,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	timeZone := os.Getenv("TIMEZONE")
+
 	recentUrls := make(map[string]struct{})
 	{
 		v := url.Values{}
@@ -101,7 +103,10 @@ events:
 		if event.Status == "cancelled" {
 			continue events
 		}
-		link := event.HtmlLink + "&ctz=Asia/Tokyo"
+		link := event.HtmlLink
+		if timeZone != "" {
+			link += "&ctz=" + timeZone
+		}
 
 		if _, ok := recentUrls[link]; ok {
 			continue
