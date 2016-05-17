@@ -98,6 +98,8 @@ func main() {
 		}
 	}
 
+	now := time.Now()
+
 events:
 	for _, event := range events.Items {
 		if event.Status == "cancelled" {
@@ -123,6 +125,9 @@ events:
 			if err != nil {
 				log.Fatal(err)
 			}
+			if now.After(start) {
+				continue events
+			}
 			date = start.Format("01/02")
 		} else if event.Start.DateTime != "" {
 			startLoc, err := time.LoadLocation(event.Start.TimeZone)
@@ -132,6 +137,9 @@ events:
 			start, err := time.ParseInLocation(time.RFC3339, event.Start.DateTime, startLoc)
 			if err != nil {
 				log.Fatal(err)
+			}
+			if now.After(start) {
+				continue events
 			}
 			date = start.Format("01/02")
 		}
