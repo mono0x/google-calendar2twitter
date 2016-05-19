@@ -1,0 +1,10 @@
+package: github.com/mono0x/google-calendar2twitter
+import:
+- package: github.com/ChimeraCoder/anaconda
+- package: github.com/joho/godotenv
+- package: golang.org/x/oauth2
+  subpackages:
+  - google
+- package: google.golang.org/api
+  subpackages:
+  - calendar/v3

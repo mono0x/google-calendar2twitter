@@ -1,3 +1,4 @@
 /google_client_credentials.json
 /google-calendar2twitter
 /*.env
+/vendor
