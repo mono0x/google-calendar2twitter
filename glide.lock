@@ -1,5 +1,5 @@
-hash: 0ebfe85c97a39b74b8a83f0659ef53b3e1abb7816b8cb4db701fbd838326d452
-updated: 2016-05-19T21:20:06.655872083+09:00
+hash: 488f53a609f3906bc237e774d602e1074b86af6f03999db02b44a48fbd9961e1
+updated: 2016-09-18T20:58:36.372400972+09:00
 imports:
 - name: github.com/azr/backoff
   version: 53511d3c733003985b0b76f733df1f4d0095ee6a
@@ -43,18 +43,22 @@ imports:
 - name: google.golang.org/appengine
   version: e234e71924d4aa52444bc76f2f831f13fa1eca60
   subpackages:
-  - urlfetch
   - internal
-  - internal/urlfetch
   - internal/app_identity
-  - internal/modules
   - internal/base
   - internal/datastore
   - internal/log
+  - internal/modules
   - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
 - name: google.golang.org/cloud
   version: 426f71cccabdf34d0fd67fc49e25038c8f49a0bb
   subpackages:
   - compute/metadata
   - internal
-devImports: []
+- name: googlemaps.github.io/maps
+  version: ce8994f7a138534e9da9fd27c5424eeea20ac563
+  subpackages:
+  - internal
+testImports: []

@@ -8,3 +8,4 @@ import:
 - package: google.golang.org/api
   subpackages:
   - calendar/v3
+- package: googlemaps.github.io/maps

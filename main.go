@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -10,6 +12,8 @@ import (
 	"time"
 
 	"google.golang.org/api/calendar/v3"
+
+	"googlemaps.github.io/maps"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -34,6 +38,15 @@ func main() {
 
 	anaconda.SetConsumerKey(os.Getenv("TWITTER_CONSUMER_KEY"))
 	anaconda.SetConsumerSecret(os.Getenv("TWITTER_CONSUMER_SECRET"))
+
+	var mapsClient *maps.Client
+	if apiKey := os.Getenv("GOOGLE_API_KEY"); apiKey != "" {
+		var err error
+		mapsClient, err = maps.NewClient(maps.WithAPIKey(apiKey))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	api := anaconda.NewTwitterApi(os.Getenv("TWITTER_OAUTH_TOKEN"), os.Getenv("TWITTER_OAUTH_TOKEN_SECRET"))
 	defer api.Close()
@@ -144,10 +157,22 @@ events:
 			date = start.Format("01/02")
 		}
 
+		values := url.Values{}
+
 		var location string
 		{
 			parts := strings.SplitN(event.Location, ",", 2)
 			location = parts[0]
+			if mapsClient != nil {
+				r := &maps.GeocodingRequest{
+					Address: event.Location,
+				}
+				res, err := mapsClient.Geocode(context.Background(), r)
+				if err == nil && len(res) > 0 {
+					values.Set("lat", fmt.Sprintf("%f", res[0].Geometry.Location.Lat))
+					values.Set("long", fmt.Sprintf("%f", res[0].Geometry.Location.Lng))
+				}
+			}
 		}
 
 		replacer := strings.NewReplacer(
@@ -157,7 +182,7 @@ events:
 			"{location}", location,
 		)
 		text := replacer.Replace(template)
-		_, err := api.PostTweet(text, url.Values{})
+		_, err := api.PostTweet(text, values)
 		if err != nil {
 			if apiErr, ok := err.(*anaconda.ApiError); ok {
 				for _, err := range apiErr.Decoded.Errors {
