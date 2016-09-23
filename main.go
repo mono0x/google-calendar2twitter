@@ -169,6 +169,7 @@ events:
 				}
 				res, err := mapsClient.Geocode(context.Background(), r)
 				if err == nil && len(res) > 0 {
+					values.Set("display_coordinates", "true")
 					values.Set("lat", fmt.Sprintf("%f", res[0].Geometry.Location.Lat))
 					values.Set("long", fmt.Sprintf("%f", res[0].Geometry.Location.Lng))
 				}
